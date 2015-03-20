@@ -81,7 +81,7 @@ public class NLPStormTopologyDistr {
         
         Config conf = new Config();
         conf.setDebug(true);
-        conf.setNumWorkers(8);
+        conf.setNumWorkers(60);
         
 
         StormSubmitter.submitTopology("nlpstorm",conf, builder.createTopology());
