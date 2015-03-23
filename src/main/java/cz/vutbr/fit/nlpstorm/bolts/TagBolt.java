@@ -31,6 +31,13 @@ import backtype.storm.tuple.Values;
 import cz.vutbr.fit.nlpstorm.util.DocumentHolder;
 import edu.northwestern.at.utils.StringUtils;
 
+/**
+ * A bolt for tagging incoming documents with deduplicated paragraphs.
+ * Bolt is responsible for maintaining document-paragraph cache (data need to be cached until every part of document went through deduplication process)
+ * Accepts: List of documents and deduplicated paragraph hashes to be linked back together
+ * Emits: List of tagged documents
+ * @author ikouril
+ */
 public class TagBolt implements IRichBolt {
 	
 	private static final Logger log = LoggerFactory.getLogger(TagBolt.class);
@@ -47,6 +54,10 @@ public class TagBolt implements IRichBolt {
 	
 	StringBuilder actualTags=new StringBuilder();
 
+	/**
+     * Creates a new TagBolt.
+     * @param id the id of actual nlpstorm run
+     */
 	public TagBolt(String id){
 		try {
 			monitor=new Monitoring(id, "knot28.fit.vutbr.cz", "nlpstorm", "nlpstormdb88pass", "nlpstormdb");
@@ -66,10 +77,12 @@ public class TagBolt implements IRichBolt {
 		catch(UnknownHostException e){
 			hostname="-unknown-";
 		}
+		//make sure TreeTagger is installed under given path
 		System.setProperty("treetagger.home", "/opt/TreeTagger");
 	    tt = new TreeTaggerWrapper<String>();
 	    
 	    try {
+	    	//english parameter file and encoding for TreeTagger
 			tt.setModel("/opt/TreeTagger/lib/english-utf8.par:utf8");
 			tt.setHandler(new TokenHandler<String>() {
 	        public void token(String token, String pos, String lemma) {

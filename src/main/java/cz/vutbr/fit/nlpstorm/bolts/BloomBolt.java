@@ -18,16 +18,28 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
+/**
+ * A bolt implementing a bloom filter for paragraph deduplication
+ * Accepts: Hashes of paragraphs and their position within documents
+ * Emits: Information whether given hash marks duplicate paragraph or not
+ * @author ikouril
+ */
 public class BloomBolt implements IRichBolt {
 	
 	private static final Logger log = LoggerFactory.getLogger(BloomBolt.class);
 	OutputCollector collector;
 	String hostname;
 	Monitoring monitor;
-	long expectedNumberOfElements = 150000000;
+	
+	//TODO: Make configurable - based on number of BloomBolt instances
+	long expectedNumberOfElements = 300000000;
     double falsePosProb = .01;
     LongFastBloomFilter longFastBloomFilter = LongFastBloomFilter.getFilter(expectedNumberOfElements, falsePosProb);
 	
+    /**
+     * Creates a new BloomBolt.
+     * @param id the id of actual nlpstorm run
+     */
 	public BloomBolt(String id){
 		try {
 			monitor=new Monitoring(id, "knot28.fit.vutbr.cz", "nlpstorm", "nlpstormdb88pass", "nlpstormdb");
@@ -37,6 +49,11 @@ public class BloomBolt implements IRichBolt {
 		}
 	}
 	
+	/**
+     * Converts a long value to byte array
+     * @param long value to be converted
+     * @return byte array of converted value
+     */
 	public static byte[] longToByteArray(long value) {
 	    return new byte[] {
 	        (byte) (value >> 56),

@@ -26,10 +26,17 @@ import cz.vutbr.fit.nlpstorm.util.Document;
 import de.dfki.lt.mdparser.outputformat.ConllOutput;
 import de.dfki.lt.mdparser.test.MDParser;
 
-
+/**
+ * A bolt for parsing tagged documents
+ * Accepts: List of tagged documents to be tagged 
+ * Emits: Nothing, writes results directly to HDD
+ * @author ikouril
+ */
 public class ParseBolt implements IRichBolt {
 	
 	private static final Logger log = LoggerFactory.getLogger(ParseBolt.class);
+	
+	//Average number documents in one file, can be made configurable
 	private static final int docsPerFile=10000;
 	OutputCollector collector;
 	String hostname;
@@ -38,6 +45,10 @@ public class ParseBolt implements IRichBolt {
 	BufferedWriter writer=null;
 	int docsWritten=0;
 	
+	/**
+     * Creates a new ParseBolt.
+     * @param id the id of actual nlpstorm run
+     */
 	public ParseBolt(String id){
 		try {
 			monitor=new Monitoring(id, "knot28.fit.vutbr.cz", "nlpstorm", "nlpstormdb88pass", "nlpstormdb");
@@ -49,12 +60,18 @@ public class ParseBolt implements IRichBolt {
 		
 	}
 	
+	/**
+     * Prepares new file to write to, after limit of documents per file is reached
+     */
 	private void newFile(){
 		String uuid=UUID.randomUUID().toString();
 		FileWriter fstream=null;
 		try {
 			if (writer!=null)
 				writer.close();
+			
+			//document output path is hardcoded, make sure path is writable
+			//TODO: Make configurable
 			fstream = new FileWriter("/mnt/data/stormData/"+uuid+".parsed");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -86,6 +103,7 @@ public class ParseBolt implements IRichBolt {
 		
 		MDParser parser=null;
 		try {
+			//Creating new parser instance each time - class is not serializable
 			parser=new MDParser();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

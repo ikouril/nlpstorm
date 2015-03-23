@@ -39,7 +39,11 @@ import cz.vutbr.fit.nlpstorm.topologies.NLPStormTopology;
 import cz.vutbr.fit.nlpstorm.util.Document;
 import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
-
+/**
+ * A spout for reading gzipped warc input files and removing boilerplate
+ * Emits: List of cleared documents for further processing
+ * @author ikouril
+ */
 public class WarcSpout extends BaseRichSpout{
 	/**
 	 * 
@@ -117,6 +121,10 @@ public class WarcSpout extends BaseRichSpout{
 		newDump();
 	}
 	
+	/**
+     * Opens new file for reading, when previous one file has been read to the end
+     * @return true when there is still some file to be processed, otherwise false
+     */
 	private boolean newDump(){
 		
 		String file=files.poll();

@@ -25,7 +25,12 @@ import com.cybozu.labs.langdetect.LangDetectException;
 import cz.vutbr.fit.monitoring.Monitoring;
 import cz.vutbr.fit.nlpstorm.util.Document;
 
-
+/**
+ * A bolt for segmenting and tokenizing input document
+ * Accepts: List of language filtered documents
+ * Emits: List of tokenized documents
+ * @author ikouril
+ */
 public class TokenizerBolt implements IRichBolt {
 	
 	private static final Logger log = LoggerFactory.getLogger(TokenizerBolt.class);
@@ -33,6 +38,12 @@ public class TokenizerBolt implements IRichBolt {
 	String hostname;
 	Monitoring monitor;
 	
+	/**
+	 * A bolt implementing a bloom filter for paragraph deduplication
+	 * Accepts: Hashes of paragraphs and their position within documents
+	 * Emits: Information whether given hash marks duplicate paragraph or not
+	 * @author ikouril
+	 */
 	public TokenizerBolt(String id){
 		try {
 			monitor=new Monitoring(id, "knot28.fit.vutbr.cz", "nlpstorm", "nlpstormdb88pass", "nlpstormdb");

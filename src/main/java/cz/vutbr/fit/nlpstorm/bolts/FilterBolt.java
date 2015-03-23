@@ -26,6 +26,12 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
+/**
+ * A bolt filtering input document based on recognized language - only english documents allowed to move forth
+ * Accepts: List of documents containing paragraphs for deduplication
+ * Emits: Information whether given hash marks duplicate paragraph or not
+ * @author ikouril
+ */
 public class FilterBolt implements IRichBolt {
 	
 	private static final Logger log = LoggerFactory.getLogger(FilterBolt.class);
@@ -33,6 +39,10 @@ public class FilterBolt implements IRichBolt {
 	String hostname;
 	Monitoring monitor;
 	
+	/**
+     * Creates a new FilterBolt.
+     * @param id the id of actual nlpstorm run
+     */
 	public FilterBolt(String id){
 		try {
 			monitor=new Monitoring(id, "knot28.fit.vutbr.cz", "nlpstorm", "nlpstormdb88pass", "nlpstormdb");
@@ -48,6 +58,8 @@ public class FilterBolt implements IRichBolt {
 		this.collector=collector;
 		
 		try {
+			//profiles must be present under given path
+			//TODO: perhaps make configurable
 			DetectorFactory.loadProfile("/usr/share/langdetect/langdetect-03-03-2014/profiles");
 		} catch (LangDetectException e) {
 
@@ -76,7 +88,6 @@ public class FilterBolt implements IRichBolt {
 	           	 Detector detector = DetectorFactory.create();
 	           	 detector.append(d.getContent());
 	           	 lang = detector.detect();
-	           	 log.info("Detected language: "+lang);
 	       	 }
 	       	 catch (Exception e){
 	       		 e.printStackTrace();

@@ -29,7 +29,10 @@ import cz.vutbr.fit.nlpstorm.bolts.TokenizerBolt;
 import cz.vutbr.fit.nlpstorm.spouts.WarcSpout;
 
 
-
+/**
+ * Distributed NLPStorm topology
+ * @author ikouril
+ */
 public class NLPStormTopologyDistr {
 	
 	public static void main(String[] params) throws JSAPException, AlreadyAliveException, InvalidTopologyException{
@@ -41,7 +44,7 @@ public class NLPStormTopologyDistr {
 				}
 		);
 		
-
+		//parse arguments
 		JSAPResult jsapResult = jsap.parse( params );
 		
 		NLPStormTopology.BLOCK=jsapResult.getInt("blockSize");
@@ -55,6 +58,7 @@ public class NLPStormTopologyDistr {
         
         String deploymentId=UUID.randomUUID().toString();
         
+        logger.info("Topology configuraed with given deploymentID: "+deploymentId);
 
         WarcSpout warc=new WarcSpout(NLPStormTopology.BLOCK,deploymentId);
         FilterBolt filter=new FilterBolt(deploymentId);

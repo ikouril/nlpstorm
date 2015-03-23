@@ -1,8 +1,9 @@
 package cz.vutbr.fit.nlpstorm.util;
 
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Class for holding tags, needed for fully vertical input format needed by MDParser
+ */
 public class Tags {
 	public String before="";
 	public String after="";

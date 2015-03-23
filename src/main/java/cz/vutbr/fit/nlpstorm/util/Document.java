@@ -15,6 +15,10 @@ import com.clearnlp.segmentation.AbstractSegmenter;
 import com.clearnlp.tokenization.AbstractTokenizer;
 import com.google.common.base.CharMatcher;
 
+/**
+ * Class representing a document in the stream processing
+ * @author ikouril
+ */
 public class Document {
 	
 	private String content=null;
@@ -31,6 +35,9 @@ public class Document {
 	private long[] hashes;
 	private int[] hashMarkers;
 
+	/**
+	 * Hashes existing documents
+	 */
 	public void computeHashes(){
 		hashes=new long[paragraphs.size()];
 		hashMarkers=new int[paragraphs.size()];
@@ -41,6 +48,9 @@ public class Document {
 		}
 	}
 	
+	/**
+	 * Removes all unnecessary data
+	 */
 	public void clear(){
 		hashes=null;
 		hashMarkers=null;
@@ -49,16 +59,27 @@ public class Document {
 		head=null;
 	}
 	
+	/**
+	 * Marks paragraph duplicate
+	 * @param pos - position of target paragraph
+	 * @param dupl - information about paragraph duplicity
+	 */
 	public void setMarker(int pos,boolean dupl){
 		hashMarkers[pos]=dupl?1:2;
 		//1 - duplicate
 		//2 - no duplicate
 	}
 	
+	/**
+	 * @return array of hashes
+	 */
 	public long[] getHashes(){
 		return hashes;
 	}
 	
+	/**
+	 * Checks whether all paragraphs have duplication information
+	 */
 	public boolean isCompleted(){
 		for (int i=0;i<hashMarkers.length;i++){
 			if (hashMarkers[i]==0)
@@ -67,6 +88,10 @@ public class Document {
 		return true;
 	}
 	
+	/**
+	 * Creates new document
+	 * @param content - string content to form a document
+	 */
 	public Document(String content){
 		this.content=content;
 		
@@ -113,6 +138,11 @@ public class Document {
 		this.uri = uri;
 	}
 	
+	/**
+	 * Converts document to list of tokens needed for TreeTagger
+	 * @param tags - structure for holding tags to given positions (like <s>, <p> ...)
+	 * @return list of tokens processable by TreeTagger
+	 */
 	public List<String> toTokens(Map<Integer,Tags> tags){
 		int tagCounter=0;
 		List<String> rc=new ArrayList<String>();
@@ -193,6 +223,9 @@ public class Document {
 		return rc;
 	}
 
+	/**
+	 * Load paragraphs from tokenized input
+	 */
 	public void loadParagraphs(){
 		if (!title.equals("Unknown")){
 			StringBuilder headBuilder=new StringBuilder();

@@ -26,7 +26,10 @@ import cz.vutbr.fit.nlpstorm.bolts.TokenizerBolt;
 import cz.vutbr.fit.nlpstorm.spouts.WarcSpout;
 
 
-
+/**
+ * Local NLPStorm topology
+ * @author ikouril
+ */
 public class NLPStormTopology {
 
 	public static String[] FILES = null;
@@ -55,6 +58,8 @@ public class NLPStormTopology {
         logger.debug("TOPOLOGY START");
         
         String deploymentId=UUID.randomUUID().toString();
+        
+        logger.info("Topology configuraed with given deploymentID: "+deploymentId);
         
 
         WarcSpout warc=new WarcSpout(BLOCK,deploymentId);

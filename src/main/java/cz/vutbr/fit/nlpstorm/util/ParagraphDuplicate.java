@@ -1,9 +1,19 @@
 package cz.vutbr.fit.nlpstorm.util;
 
+/**
+ * Class for holding a paragraph and an information regarding paragraph duplicity
+ */
 public class ParagraphDuplicate {
 	private int paragraphPosition;
 	private boolean duplicate;
 	private String docId;
+	
+	/**
+     * Creates a new ParagraphDuplicate
+     * @param position the position of a paragraph within a document
+     * @param dupl the duplicity information
+     * @param docId the id of the document paragaph occurs in
+     */
 	public ParagraphDuplicate(int position,boolean dupl,String docId){
 		setParagraphPosition(position);
 		setDuplicate(dupl);

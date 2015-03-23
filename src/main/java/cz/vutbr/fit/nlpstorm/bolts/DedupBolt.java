@@ -24,7 +24,12 @@ import cz.vutbr.fit.monitoring.Monitoring;
 import cz.vutbr.fit.nlpstorm.util.Document;
 import cz.vutbr.fit.nlpstorm.util.LongFastBloomFilter;
 
-
+/**
+ * A bolt responsible for hashing document paragraphs for deduplication
+ * Accepts: List of documents containing paragraphs for deduplication
+ * Emits: Hashes of contained paragraphs
+ * @author ikouril
+ */
 public class DedupBolt implements IRichBolt {
 	
 	private static final Logger log = LoggerFactory.getLogger(DedupBolt.class);
@@ -33,8 +38,10 @@ public class DedupBolt implements IRichBolt {
 	Monitoring monitor;
 	
 
-	
-	
+	/**
+     * Creates a new DedupBolt.
+     * @param id the id of actual nlpstorm run
+     */
 	public DedupBolt(String id){
 		try {
 			monitor=new Monitoring(id, "knot28.fit.vutbr.cz", "nlpstorm", "nlpstormdb88pass", "nlpstormdb");
